@@ -1,9 +1,14 @@
 <template>
   <div
     class="wrapper"
-    v-bind:style="{ backgroundColor: settings.backgroundColor }"
+    v-bind:style="{
+      backgroundColor: settings.backgroundColor,
+      backgroundImage:
+        settings.backgroundImageUrl && `url(${settings.backgroundImageUrl})`
+    }"
   >
     <div v-if="!edit">
+      {{ settings }}
       <Greeting />
       <Clock />
     </div>
@@ -71,5 +76,7 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-size: cover;
+  background-position: center;
 }
 </style>

@@ -19,6 +19,38 @@
         <input type="color" v-model="settings.backgroundColor" />
       </div>
     </div>
+    <div class="settings__row">
+      <div class="settings__row-key">
+        <span>Background Image</span>
+      </div>
+      <div class="settings__row-value">
+        <select v-model="settings.backgroundImageSource">
+          <option value="none">None, keep it simple</option>
+          <option v-bind:disabled="!unsplashEnabled" value="unsplash"
+            >Unsplash
+            <span v-if="!unsplashEnabled">
+              (Add unsplash credentials for support ❤️)
+            </span>
+          </option>
+        </select>
+      </div>
+    </div>
+    <div
+      class="settings__row"
+      v-if="settings.backgroundImageSource === 'unsplash'"
+    >
+      <div class="settings__row-key">
+        <span>Unsplash Topic</span>
+      </div>
+      <div class="settings__row-value">
+        <input
+          class="settings__input"
+          v-bind:disabled="!unsplashEnabled"
+          type="text"
+          v-model="settings.backgroundImageUnsplashTopic"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -36,8 +68,23 @@ export default defineComponent({
       store.commit("setSettings", settings);
     });
 
+    watchEffect(() => {
+      switch (settings.backgroundImageSource) {
+        case "unsplash":
+          store.dispatch("setRandomUnsplashBackgroundImage");
+          break;
+        case "none":
+          break;
+      }
+    });
+
+    const unsplashEnabled =
+      process.env.VUE_APP_UNSPLASH_ACCESS_KEY &&
+      process.env.VUE_APP_UNSPLASH_SECRET_ACCESS_KEY;
+
     return {
-      settings
+      settings,
+      unsplashEnabled
     };
   }
 });
