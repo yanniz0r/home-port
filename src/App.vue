@@ -1,20 +1,22 @@
 <template>
-  <div
-    class="wrapper"
-    v-bind:style="{
-      backgroundColor: settings.backgroundColor,
-      backgroundImage:
-        settings.backgroundImageUrl && `url(${settings.backgroundImageUrl})`
-    }"
-  >
-    <div v-if="!edit">
-      {{ settings }}
-      <Greeting />
-      <Clock />
-    </div>
-    <div v-if="edit">
-      <h1>Settings</h1>
-      <Settings />
+  <div>
+    <Settings v-if="edit" />
+    <div
+      class="wrapper"
+      v-bind:class="{
+        'wrapper--blur': edit
+      }"
+      v-bind:style="{
+        backgroundColor: settings.backgroundColor,
+        backgroundImage:
+          settings.backgroundImageUrl && `url(${settings.backgroundImageUrl})`
+      }"
+    >
+      <div>
+        {{ settings }}
+        <Greeting />
+        <Clock />
+      </div>
     </div>
   </div>
   <button @click="edit = !edit" class="action-button">
@@ -66,6 +68,7 @@ html {
 
 .action-button {
   position: absolute;
+  z-index: 200;
   right: 12px;
   bottom: 12px;
 }
@@ -78,5 +81,9 @@ html {
   justify-content: center;
   background-size: cover;
   background-position: center;
+}
+
+.wrapper--blur {
+  filter: blur(10px);
 }
 </style>
