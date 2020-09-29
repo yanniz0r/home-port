@@ -6,15 +6,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Greeting",
   setup() {
     const store = useStore();
+    const name = computed(() => store.state.settings.name);
     return {
-      name: store.state.settings.name
+      name
     };
   }
 });

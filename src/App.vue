@@ -3,17 +3,17 @@
     <Settings v-if="edit" :onClose="() => (edit = false)" />
     <div
       class="wrapper"
-      v-bind:class="{
+      :class="{
         'wrapper--blur': edit
       }"
-      v-bind:style="{
+      :style="{
         backgroundColor: settings.backgroundColor,
         backgroundImage:
-          settings.backgroundImageUrl && `url(${settings.backgroundImageUrl})`
+          settings.backgroundImageUrl && `url('${settings.backgroundImageUrl}')`
       }"
     >
       <div>
-        {{ settings }}
+        {{ settings.backgroundImageUrl }}
         <Greeting />
         <Clock />
       </div>
@@ -31,6 +31,7 @@ import Clock from "./components/Clock.vue";
 import Greeting from "./components/Greeting.vue";
 import Settings from "./components/Settings.vue";
 import CogIcon from "./components/icons/Cog-Icon.vue";
+import { State } from "./store";
 
 export default defineComponent({
   name: "App",
@@ -41,8 +42,7 @@ export default defineComponent({
     CogIcon
   },
   setup() {
-    const store = useStore();
-
+    const store = useStore<State>();
     const settings = computed(() => store.state.settings);
     const edit = ref(false);
     return {

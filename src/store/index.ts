@@ -1,8 +1,18 @@
 import Unsplash from 'unsplash-js';
-import { createStore } from "vuex";
+import { createLogger, createStore } from "vuex";
 
 const storedSettingsString = localStorage.getItem("settings");
 const storedSettings = storedSettingsString ? JSON.parse(storedSettingsString) : {};
+
+export interface State {
+  settings: {
+    backgroundColor: string;
+    backgroundImageSource: string;
+    backgroundImageUrl?: string;
+    backgroundImageUnsplashTopic?: string;
+    name?: string;
+  }
+}
 
 const defaultSettings = {
   backgroundColor: '#fff',
@@ -16,7 +26,8 @@ const unsplash = UNSPLASH_ACCESS_KEY && UNSPLASH_SECRET_ACCESS_KEY && new Unspla
   secret: UNSPLASH_SECRET_ACCESS_KEY,
 })
 
-export default createStore({
+
+const store = createStore<State>({
   state: {
     settings: {
       ...defaultSettings,
@@ -25,15 +36,17 @@ export default createStore({
   },
   mutations: {
     setSettings(state, settings) {
-      const newSettings = {
-        ...state.settings,
-        ...settings,
-      };
-      state.settings = newSettings;
-      localStorage.setItem("settings", JSON.stringify(newSettings));
+      state.settings = settings;
+      localStorage.setItem("settings", JSON.stringify(settings));
     },
   },
   actions: {
+    updateSettings(store, settings) {
+      store.commit('setSettings', {
+        ...store.state.settings,
+        ...settings
+      });
+    },
     async setRandomUnsplashBackgroundImage(store) {
       const topic = store.state.settings.backgroundImageUnsplashTopic;
       if (!topic) {
@@ -50,9 +63,19 @@ export default createStore({
       if (!images.length) {
         console.warn(`🚨 "${topic}" seems to be something noone makes photos of... Maybe try something else. I heard "cats" always works.`);
       }
-      const selectedImageUrl = images[Math.floor(Math.random() * images.length)].urls.full;
-      store.commit('setSettings', {backgroundImageUrl: selectedImageUrl});
+      const selectedImageUrl = images[Math.floor(Math.random() * images.length)].urls.thumb;
+      console.info("Got a beautiful new background image from unsplash:", selectedImageUrl);
+      store.commit('setSettings', { ...store.state.settings, backgroundImageUrl: selectedImageUrl });
+    },
+    reset(store) {
+      localStorage.removeItem("settings");
+      store.commit('setSettings', defaultSettings)
     }
   },
-  modules: {}
+  modules: {},
+  plugins: [
+    createLogger()
+  ]
 });
+
+export default store;

@@ -1,7 +1,7 @@
 <template>
   <div class="settings__overlay">
     <div class="settings__top-right-actions">
-      <button class="settings__close-button" @click="onClose">
+      <button class="settings__close-button" @click="close">
         <X-Icon />
       </button>
     </div>
@@ -32,7 +32,7 @@
         <div class="settings__row-value">
           <select v-model="settings.backgroundImageSource">
             <option value="none">None, keep it simple</option>
-            <option v-bind:disabled="!unsplashEnabled" value="unsplash"
+            <option :disabled="!unsplashEnabled" value="unsplash"
               >Unsplash
               <span v-if="!unsplashEnabled">
                 (Add unsplash credentials for support ❤️)
@@ -42,7 +42,39 @@
         </div>
       </div>
       <div
-        class="settings__row"
+        class="settings__row settings__sub-row"
+        v-if="settings.backgroundImageSource === 'unsplash'"
+      >
+        <div class="settings__row-key">
+          <span>Unsplash Secret Access Key</span>
+        </div>
+        <div class="settings__row-value">
+          <input
+            class="settings__input"
+            :disabled="!unsplashEnabled"
+            type="text"
+            v-model="settings.unsplashSecretAccessKey"
+          />
+        </div>
+      </div>
+      <div
+        class="settings__row settings__sub-row"
+        v-if="settings.backgroundImageSource === 'unsplash'"
+      >
+        <div class="settings__row-key">
+          <span>Unsplash Access Key ID</span>
+        </div>
+        <div class="settings__row-value">
+          <input
+            class="settings__input"
+            :disabled="!unsplashEnabled"
+            type="text"
+            v-model="settings.unsplashAccessKeyID"
+          />
+        </div>
+      </div>
+      <div
+        class="settings__row settings__sub-row"
         v-if="settings.backgroundImageSource === 'unsplash'"
       >
         <div class="settings__row-key">
@@ -51,14 +83,14 @@
         <div class="settings__row-value">
           <input
             class="settings__input"
-            v-bind:disabled="!unsplashEnabled"
+            :disabled="!unsplashEnabled"
             type="text"
             v-model="settings.backgroundImageUnsplashTopic"
           />
         </div>
       </div>
       <div
-        class="settings__row"
+        class="settings__row settings__sub-row"
         v-if="settings.backgroundImageSource === 'unsplash'"
       >
         <div class="settings__row-key">
@@ -68,13 +100,23 @@
           <button v-on:click="getRandomUnsplashImage">Refresh</button>
         </div>
       </div>
+      <div class="settings__row">
+        <div class="settings__row-key">
+          <span>Reset App</span>
+        </div>
+        <div class="settings__row-value">
+          <button v-on:click="reset">Reset</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watchEffect } from "vue";
+import { defineComponent, reactive, ref, watch } from "vue";
 import { useStore } from "vuex";
+
+import { State } from "@/store";
 
 import XIcon from "./icons/X-Icon.vue";
 
@@ -88,26 +130,54 @@ export default defineComponent({
   components: {
     "X-Icon": XIcon
   },
-  setup() {
-    const store = useStore();
-    const settings = reactive(store.state.settings);
+  setup(props) {
+    const store = useStore<State>();
+    const settings = reactive({ ...store.state.settings });
+    const canSave = ref(false);
 
-    watchEffect(() => {
-      store.commit("setSettings", settings);
-    });
+    watch(
+      () => settings,
+      () => {
+        canSave.value = true;
+      }
+    );
+
+    const getRandomUnsplashImage = () => {
+      store.dispatch("setRandomUnsplashBackgroundImage");
+    };
+
+    const saveData = () => {
+      store.dispatch("updateSettings", settings).then(() => {
+        if (
+          settings.backgroundImageSource === "unsplash" &&
+          !settings.backgroundImageUrl
+        ) {
+          getRandomUnsplashImage();
+        }
+      });
+    };
+
+    const close = () => {
+      props.onClose?.();
+      saveData();
+    };
 
     const unsplashEnabled =
       process.env.VUE_APP_UNSPLASH_ACCESS_KEY &&
       process.env.VUE_APP_UNSPLASH_SECRET_ACCESS_KEY;
 
-    const getRandomUnsplashImage = () => {
-      store.dispatch("setRandomUnsplashBackgroundImage");
+    const reset = () => {
+      store.dispatch("reset");
     };
 
     return {
       settings,
       unsplashEnabled,
       getRandomUnsplashImage,
+      reset,
+      canSave,
+      close,
+      saveData
     };
   }
 });
@@ -135,6 +205,7 @@ export default defineComponent({
 }
 
 .settings__row {
+  box-sizing: border-box;
   $border: solid 1px rgba(0, 0, 0, 0.1);
   display: flex;
   padding: 16px;
@@ -143,6 +214,16 @@ export default defineComponent({
 
   &:last-of-type {
     border-bottom: $border;
+  }
+}
+
+.settings__sub-row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 32px;
+
+  .settings__row-key {
+    font-weight: normal;
   }
 }
 
