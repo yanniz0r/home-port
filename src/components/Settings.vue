@@ -1,5 +1,10 @@
 <template>
   <div class="settings__overlay">
+    <div class="settings__top-right-actions">
+      <button class="settings__close-button" @click="onClose">
+        <X-Icon />
+      </button>
+    </div>
     <div class="settings__wrapper">
       <div class="settings__row">
         <h2>Your data</h2>
@@ -71,8 +76,18 @@
 import { defineComponent, reactive, watchEffect } from "vue";
 import { useStore } from "vuex";
 
+import XIcon from "./icons/X-Icon.vue";
+
 export default defineComponent({
   name: "Settings",
+  props: {
+    onClose: {
+      type: Function
+    }
+  },
+  components: {
+    "X-Icon": XIcon
+  },
   setup() {
     const store = useStore();
     const settings = reactive(store.state.settings);
@@ -92,7 +107,7 @@ export default defineComponent({
     return {
       settings,
       unsplashEnabled,
-      getRandomUnsplashImage
+      getRandomUnsplashImage,
     };
   }
 });
@@ -146,5 +161,26 @@ export default defineComponent({
   border: none;
   text-align: right;
   width: 100%;
+}
+
+.settings__close-button {
+  height: 32px;
+  width: 32px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+
+  svg {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+.settings__top-right-actions {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  padding: 0;
 }
 </style>

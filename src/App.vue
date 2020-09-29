@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Settings v-if="edit" />
+    <Settings v-if="edit" :onClose="() => (edit = false)" />
     <div
       class="wrapper"
       v-bind:class="{
@@ -20,7 +20,7 @@
     </div>
   </div>
   <button @click="edit = !edit" class="action-button">
-    {{ edit ? "Back" : "Edit" }}
+    <CogIcon />
   </button>
 </template>
 
@@ -30,13 +30,15 @@ import { useStore } from "vuex";
 import Clock from "./components/Clock.vue";
 import Greeting from "./components/Greeting.vue";
 import Settings from "./components/Settings.vue";
+import CogIcon from "./components/icons/Cog-Icon.vue";
 
 export default defineComponent({
   name: "App",
   components: {
     Clock,
     Greeting,
-    Settings
+    Settings,
+    CogIcon
   },
   setup() {
     const store = useStore();
@@ -68,9 +70,24 @@ html {
 
 .action-button {
   position: absolute;
-  z-index: 200;
-  right: 12px;
-  bottom: 12px;
+  right: 16px;
+  bottom: 16px;
+  padding: 0;
+  border: none;
+  background: none;
+  width: 32px;
+  height: 32px;
+
+  transition: transform 0.25s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  svg {
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
 
 .wrapper {
