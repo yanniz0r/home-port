@@ -41,70 +41,69 @@
           </select>
         </div>
       </div>
-      <div
-        class="settings__row settings__sub-row"
-        v-if="settings.backgroundImageSource === 'unsplash'"
-      >
-        <div class="settings__row-key">
-          <span>Unsplash Secret Access Key</span>
+      <template v-if="settings.backgroundImageSource === 'unsplash'">
+        <div class="settings__row settings__sub-row">
+          <div class="settings__row-key">
+            <span>Unsplash Secret Access Key</span>
+          </div>
+          <div class="settings__row-value">
+            <input
+              class="settings__input"
+              :disabled="!unsplashEnabled"
+              type="text"
+              v-model="settings.unsplashSecretAccessKey"
+            />
+          </div>
         </div>
-        <div class="settings__row-value">
-          <input
-            class="settings__input"
-            :disabled="!unsplashEnabled"
-            type="text"
-            v-model="settings.unsplashSecretAccessKey"
-          />
+        <div
+          class="settings__row settings__sub-row"
+          v-if="settings.backgroundImageSource === 'unsplash'"
+        >
+          <div class="settings__row-key">
+            <span>Unsplash Access Key ID</span>
+          </div>
+          <div class="settings__row-value">
+            <input
+              class="settings__input"
+              :disabled="!unsplashEnabled"
+              type="text"
+              v-model="settings.unsplashAccessKeyID"
+            />
+          </div>
         </div>
-      </div>
-      <div
-        class="settings__row settings__sub-row"
-        v-if="settings.backgroundImageSource === 'unsplash'"
-      >
-        <div class="settings__row-key">
-          <span>Unsplash Access Key ID</span>
+        <div
+          class="settings__row settings__sub-row"
+          v-if="settings.backgroundImageSource === 'unsplash'"
+        >
+          <div class="settings__row-key">
+            <span>Unsplash Topic</span>
+          </div>
+          <div class="settings__row-value">
+            <input
+              class="settings__input"
+              :disabled="!unsplashEnabled"
+              type="text"
+              v-model="settings.backgroundImageUnsplashTopic"
+            />
+          </div>
         </div>
-        <div class="settings__row-value">
-          <input
-            class="settings__input"
-            :disabled="!unsplashEnabled"
-            type="text"
-            v-model="settings.unsplashAccessKeyID"
-          />
+        <div
+          class="settings__row settings__sub-row"
+          v-if="settings.backgroundImageSource === 'unsplash'"
+        >
+          <div class="settings__row-key">
+            <span>Image size</span>
+          </div>
+          <div class="settings__row-value">
+            <select v-model="settings.backgroundImageUnsplashSize">
+              <option value="raw">raw (pretty big)</option>
+              <option value="full">full</option>
+              <option value="regular">regular</option>
+              <option value="thumb">smol</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div
-        class="settings__row settings__sub-row"
-        v-if="settings.backgroundImageSource === 'unsplash'"
-      >
-        <div class="settings__row-key">
-          <span>Unsplash Topic</span>
-        </div>
-        <div class="settings__row-value">
-          <input
-            class="settings__input"
-            :disabled="!unsplashEnabled"
-            type="text"
-            v-model="settings.backgroundImageUnsplashTopic"
-          />
-        </div>
-      </div>
-      <div
-        class="settings__row settings__sub-row"
-        v-if="settings.backgroundImageSource === 'unsplash'"
-      >
-        <div class="settings__row-key">
-          <span>Image size</span>
-        </div>
-        <div class="settings__row-value">
-          <select v-model="settings.backgroundImageUnsplashSize">
-            <option value="raw">raw (pretty big)</option>
-            <option value="full">full</option>
-            <option value="regular">regular</option>
-            <option value="thumb">smol</option>
-          </select>
-        </div>
-      </div>
+      </template>
       <div
         class="settings__row settings__sub-row"
         v-if="settings.backgroundImageSource === 'unsplash'"
@@ -113,7 +112,9 @@
           <span>Fetch a new image</span>
         </div>
         <div class="settings__row-value">
-          <button v-on:click="getRandomUnsplashImage">Refresh</button>
+          <button class="settings__button" v-on:click="getRandomUnsplashImage">
+            Refresh
+          </button>
         </div>
       </div>
       <div class="settings__row">
@@ -121,7 +122,7 @@
           <span>Reset App</span>
         </div>
         <div class="settings__row-value">
-          <button v-on:click="reset">Reset</button>
+          <button class="settings__button" v-on:click="reset">Reset</button>
         </div>
       </div>
     </div>
@@ -183,6 +184,7 @@ export default defineComponent({
       process.env.VUE_APP_UNSPLASH_SECRET_ACCESS_KEY;
 
     const reset = () => {
+      props.onClose?.();
       store.dispatch("reset");
     };
 
@@ -279,5 +281,18 @@ export default defineComponent({
   right: 16px;
   top: 16px;
   padding: 0;
+}
+
+.settings__button {
+  padding: 4px 6px;
+  border: none;
+  border-radius: 2px;
+  background: #8e44ad;
+  color: #fff;
+  transition: all 0.25s;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.2);
+  }
 }
 </style>

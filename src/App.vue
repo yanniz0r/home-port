@@ -1,27 +1,29 @@
 <template>
   <div>
-    <Settings v-if="edit" :onClose="() => (edit = false)" />
-    <div
-      class="wrapper"
-      :class="{
-        'wrapper--blur': edit
-      }"
-      :style="{
-        backgroundColor: settings.backgroundColor,
-        backgroundImage:
-          settings.backgroundImageUrl && `url('${settings.backgroundImageUrl}')`
-      }"
-    >
-      <div>
-        {{ settings.backgroundImageUrl }}
-        <Greeting />
-        <Clock />
+    <div>
+      <Settings v-if="edit" :onClose="() => (edit = false)" />
+      <div
+        class="wrapper"
+        :class="{
+          'wrapper--blur': edit
+        }"
+        :style="{
+          backgroundColor: settings.backgroundColor,
+          backgroundImage:
+            settings.backgroundImageUrl &&
+            `url('${settings.backgroundImageUrl}')`
+        }"
+      >
+        <div>
+          <Greeting />
+          <Clock />
+        </div>
       </div>
     </div>
+    <button @click="edit = !edit" class="action-button">
+      <CogIcon />
+    </button>
   </div>
-  <button @click="edit = !edit" class="action-button">
-    <CogIcon />
-  </button>
 </template>
 
 <script lang="ts">
