@@ -50,6 +50,13 @@ export default defineComponent({
 }
 
 .hours,
+.minutes,
+.colon {
+  color: #fff;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.75);
+}
+
+.hours,
 .minutes {
   font-size: 52px;
   font-weight: bold;

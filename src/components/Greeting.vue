@@ -25,5 +25,7 @@ export default defineComponent({
 .hello,
 .name {
   font-size: 36px;
+  color: #fff;
+  text-shadow: 0 0 25px rgba(0, 0, 0, 0.75);
 }
 </style>
