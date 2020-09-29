@@ -17,7 +17,11 @@
           >
         </div>
         <div class="settings__row-value">
-          <input class="settings__input" type="text" v-model="settings.name" />
+          <input
+            class="settings__input"
+            type="text"
+            v-model="state.settings.name"
+          />
         </div>
       </div>
       <div class="settings__row">
@@ -28,7 +32,7 @@
           >
         </div>
         <div class="settings__row-value">
-          <input type="color" v-model="settings.backgroundColor" />
+          <input type="color" v-model="state.settings.backgroundColor" />
         </div>
       </div>
       <div class="settings__row">
@@ -39,7 +43,7 @@
           >
         </div>
         <div class="settings__row-value">
-          <select v-model="settings.backgroundImageSource">
+          <select v-model="state.settings.backgroundImageSource">
             <option value="none">None, keep it simple</option>
             <option :disabled="!unsplashEnabled" value="unsplash"
               >Unsplash
@@ -50,10 +54,10 @@
           </select>
         </div>
       </div>
-      <template v-if="settings.backgroundImageSource === 'unsplash'">
+      <template v-if="state.settings.backgroundImageSource === 'unsplash'">
         <div
           class="settings__row settings__sub-row"
-          v-if="settings.backgroundImageSource === 'unsplash'"
+          v-if="state.settings.backgroundImageSource === 'unsplash'"
         >
           <div class="settings__row-key">
             <span class="settings__row-title">Unsplash Topic</span>
@@ -66,13 +70,13 @@
               class="settings__input"
               :disabled="!unsplashEnabled"
               type="text"
-              v-model="settings.backgroundImageUnsplashTopic"
+              v-model="state.settings.backgroundImageUnsplashTopic"
             />
           </div>
         </div>
         <div
           class="settings__row settings__sub-row"
-          v-if="settings.backgroundImageSource === 'unsplash'"
+          v-if="state.settings.backgroundImageSource === 'unsplash'"
         >
           <div class="settings__row-key">
             <span class="settings__row-title">Image size</span>
@@ -81,9 +85,9 @@
             >
           </div>
           <div class="settings__row-value">
-            <select v-model="settings.backgroundImageUnsplashSize">
+            <select v-model="state.settings.backgroundImageUnsplashSize">
               <option value="raw">raw (pretty big)</option>
-              <option value="full">full</option>
+              <option selected value="full">full</option>
               <option value="regular">regular</option>
               <option value="thumb">smol</option>
             </select>
@@ -122,7 +126,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, watch } from "vue";
+import { defineComponent, ref, reactive, watch } from "vue";
 import { useStore } from "vuex";
 
 import { State } from "@/store";
@@ -141,13 +145,23 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore<State>();
-    const settings = reactive({ ...store.state.settings });
-    const canSave = ref(false);
+
+    const state = reactive({
+      canSave: false,
+      settings: {
+        backgroundColor: store.state.settings.backgroundColor,
+        backgroundImageSource: store.state.settings.backgroundImageSource,
+        backgroundImageUnsplashSize:
+          store.state.settings.backgroundImageUnsplashSize,
+        backgroundImageUnsplashTopic:
+          store.state.settings.backgroundImageUnsplashTopic
+      }
+    });
 
     watch(
-      () => settings,
+      () => state.settings,
       () => {
-        canSave.value = true;
+        state.canSave = true;
       }
     );
 
@@ -156,10 +170,10 @@ export default defineComponent({
     };
 
     const saveData = () => {
-      store.dispatch("updateSettings", settings).then(() => {
+      store.dispatch("updateSettings", state.settings).then(() => {
         if (
-          settings.backgroundImageSource === "unsplash" &&
-          !settings.backgroundImageUrl
+          state.settings.backgroundImageSource === "unsplash" &&
+          !store.state.settings.backgroundImageUrl
         ) {
           getRandomUnsplashImage();
         }
@@ -181,11 +195,10 @@ export default defineComponent({
     };
 
     return {
-      settings,
+      state,
       unsplashEnabled,
       getRandomUnsplashImage,
       reset,
-      canSave,
       close,
       saveData
     };
@@ -262,6 +275,8 @@ export default defineComponent({
   border: none;
   text-align: right;
   width: 100%;
+  align-self: stretch;
+  font-size: 16px;
 }
 
 .settings__close-button {
