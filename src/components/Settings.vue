@@ -11,7 +11,10 @@
       </div>
       <div class="settings__row">
         <div class="settings__row-key">
-          <span>Name</span>
+          <span class="settings__row-title">Name</span>
+          <span class="settings__row-description"
+            >How do you like to be greeted?</span
+          >
         </div>
         <div class="settings__row-value">
           <input class="settings__input" type="text" v-model="settings.name" />
@@ -19,7 +22,10 @@
       </div>
       <div class="settings__row">
         <div class="settings__row-key">
-          <span>Background Color</span>
+          <span class="settings__row-title">Background Color</span>
+          <span class="settings__row-description"
+            >A good old color that is used as background</span
+          >
         </div>
         <div class="settings__row-value">
           <input type="color" v-model="settings.backgroundColor" />
@@ -27,7 +33,10 @@
       </div>
       <div class="settings__row">
         <div class="settings__row-key">
-          <span>Background Image</span>
+          <span class="settings__row-title">Background Image</span>
+          <span class="settings__row-description"
+            >Select where you want to get you background image from</span
+          >
         </div>
         <div class="settings__row-value">
           <select v-model="settings.backgroundImageSource">
@@ -42,41 +51,15 @@
         </div>
       </div>
       <template v-if="settings.backgroundImageSource === 'unsplash'">
-        <div class="settings__row settings__sub-row">
-          <div class="settings__row-key">
-            <span>Unsplash Secret Access Key</span>
-          </div>
-          <div class="settings__row-value">
-            <input
-              class="settings__input"
-              :disabled="!unsplashEnabled"
-              type="text"
-              v-model="settings.unsplashSecretAccessKey"
-            />
-          </div>
-        </div>
         <div
           class="settings__row settings__sub-row"
           v-if="settings.backgroundImageSource === 'unsplash'"
         >
           <div class="settings__row-key">
-            <span>Unsplash Access Key ID</span>
-          </div>
-          <div class="settings__row-value">
-            <input
-              class="settings__input"
-              :disabled="!unsplashEnabled"
-              type="text"
-              v-model="settings.unsplashAccessKeyID"
-            />
-          </div>
-        </div>
-        <div
-          class="settings__row settings__sub-row"
-          v-if="settings.backgroundImageSource === 'unsplash'"
-        >
-          <div class="settings__row-key">
-            <span>Unsplash Topic</span>
+            <span class="settings__row-title">Unsplash Topic</span>
+            <span class="settings__row-description"
+              >Something you'd like to see pictures of</span
+            >
           </div>
           <div class="settings__row-value">
             <input
@@ -92,7 +75,10 @@
           v-if="settings.backgroundImageSource === 'unsplash'"
         >
           <div class="settings__row-key">
-            <span>Image size</span>
+            <span class="settings__row-title">Image size</span>
+            <span class="settings__row-description"
+              >The size of the picture you want to load</span
+            >
           </div>
           <div class="settings__row-value">
             <select v-model="settings.backgroundImageUnsplashSize">
@@ -103,23 +89,29 @@
             </select>
           </div>
         </div>
+        <div class="settings__row settings__sub-row">
+          <div class="settings__row-key">
+            <span class="settings__row-title">Fetch new image</span>
+            <span class="settings__row-description"
+              >Don't like the current image? Get a new one!</span
+            >
+          </div>
+          <div class="settings__row-value">
+            <button
+              class="settings__button"
+              v-on:click="getRandomUnsplashImage"
+            >
+              Refresh
+            </button>
+          </div>
+        </div>
       </template>
-      <div
-        class="settings__row settings__sub-row"
-        v-if="settings.backgroundImageSource === 'unsplash'"
-      >
-        <div class="settings__row-key">
-          <span>Fetch a new image</span>
-        </div>
-        <div class="settings__row-value">
-          <button class="settings__button" v-on:click="getRandomUnsplashImage">
-            Refresh
-          </button>
-        </div>
-      </div>
       <div class="settings__row">
         <div class="settings__row-key">
-          <span>Reset App</span>
+          <span class="settings__row-title">Reset</span>
+          <span class="settings__row-description"
+            >Sometimes it's time for a fresh start. Be careful though.
+          </span>
         </div>
         <div class="settings__row-value">
           <button class="settings__button" v-on:click="reset">Reset</button>
@@ -202,11 +194,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.hello,
-.name {
-  font-size: 36px;
-}
-
 .settings__overlay {
   position: fixed;
   top: 0;
@@ -223,8 +210,8 @@ export default defineComponent({
 }
 
 .settings__row {
-  box-sizing: border-box;
   $border: solid 1px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
   display: flex;
   padding: 16px;
   width: 100%;
@@ -235,23 +222,38 @@ export default defineComponent({
   }
 }
 
+.settings__row-title {
+  display: block;
+  font-weight: bold;
+}
+
+.settings__row-description {
+  display: block;
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
 .settings__sub-row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 32px;
 
   .settings__row-key {
-    font-weight: normal;
+    font-size: 0.9rem;
   }
 }
 
 .settings__row-key {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   font-weight: bold;
 }
 
 .settings__row-value {
   flex-grow: 1;
   justify-content: flex-end;
+  align-items: center;
   display: flex;
 }
 

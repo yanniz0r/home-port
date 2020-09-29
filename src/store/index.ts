@@ -16,7 +16,7 @@ export interface State {
 }
 
 const defaultSettings = {
-  backgroundColor: '#fff',
+  backgroundColor: '#FFFFFF',
 }
 
 const UNSPLASH_ACCESS_KEY = process.env.VUE_APP_UNSPLASH_ACCESS_KEY;
