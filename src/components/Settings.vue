@@ -52,6 +52,17 @@
           />
         </div>
       </div>
+      <div
+        class="settings__row"
+        v-if="settings.backgroundImageSource === 'unsplash'"
+      >
+        <div class="settings__row-key">
+          <span>Fetch a new image</span>
+        </div>
+        <div class="settings__row-value">
+          <button v-on:click="getRandomUnsplashImage">Refresh</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -70,23 +81,18 @@ export default defineComponent({
       store.commit("setSettings", settings);
     });
 
-    watchEffect(() => {
-      switch (settings.backgroundImageSource) {
-        case "unsplash":
-          store.dispatch("setRandomUnsplashBackgroundImage");
-          break;
-        case "none":
-          break;
-      }
-    });
-
     const unsplashEnabled =
       process.env.VUE_APP_UNSPLASH_ACCESS_KEY &&
       process.env.VUE_APP_UNSPLASH_SECRET_ACCESS_KEY;
 
+    const getRandomUnsplashImage = () => {
+      store.dispatch("setRandomUnsplashBackgroundImage");
+    };
+
     return {
       settings,
-      unsplashEnabled
+      unsplashEnabled,
+      getRandomUnsplashImage
     };
   }
 });
@@ -105,7 +111,7 @@ export default defineComponent({
   width: 100vw;
   height: 100vh;
   z-index: 100;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.75);
 }
 
 .settings__wrapper {
