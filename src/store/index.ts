@@ -9,6 +9,7 @@ export interface State {
     backgroundColor: string;
     backgroundImageSource: string;
     backgroundImageUrl?: string;
+    backgroundImageUnsplashSize?: string;
     backgroundImageUnsplashTopic?: string;
     name?: string;
   }
@@ -63,7 +64,7 @@ const store = createStore<State>({
       if (!images.length) {
         console.warn(`🚨 "${topic}" seems to be something noone makes photos of... Maybe try something else. I heard "cats" always works.`);
       }
-      const selectedImageUrl = images[Math.floor(Math.random() * images.length)].urls.thumb;
+      const selectedImageUrl = images[Math.floor(Math.random() * images.length)].urls[store.state.settings.backgroundImageUnsplashSize || 'regular'];
       console.info("Got a beautiful new background image from unsplash:", selectedImageUrl);
       store.commit('setSettings', { ...store.state.settings, backgroundImageUrl: selectedImageUrl });
     },

@@ -94,6 +94,22 @@
         v-if="settings.backgroundImageSource === 'unsplash'"
       >
         <div class="settings__row-key">
+          <span>Image size</span>
+        </div>
+        <div class="settings__row-value">
+          <select v-model="settings.backgroundImageUnsplashSize">
+            <option value="raw">raw (pretty big)</option>
+            <option value="full">full</option>
+            <option value="regular">regular</option>
+            <option value="thumb">smol</option>
+          </select>
+        </div>
+      </div>
+      <div
+        class="settings__row settings__sub-row"
+        v-if="settings.backgroundImageSource === 'unsplash'"
+      >
+        <div class="settings__row-key">
           <span>Fetch a new image</span>
         </div>
         <div class="settings__row-value">
