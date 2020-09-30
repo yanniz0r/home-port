@@ -126,7 +126,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, watch } from "vue";
+import { defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
 
 import { State } from "@/store";
@@ -147,7 +147,6 @@ export default defineComponent({
     const store = useStore<State>();
 
     const state = reactive({
-      canSave: false,
       settings: {
         backgroundColor: store.state.settings.backgroundColor,
         backgroundImageSource: store.state.settings.backgroundImageSource,
@@ -157,13 +156,6 @@ export default defineComponent({
           store.state.settings.backgroundImageUnsplashTopic
       }
     });
-
-    watch(
-      () => state.settings,
-      () => {
-        state.canSave = true;
-      }
-    );
 
     const getRandomUnsplashImage = () => {
       store.dispatch("setRandomUnsplashBackgroundImage");
