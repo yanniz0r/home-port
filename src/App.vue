@@ -79,12 +79,11 @@ html {
   background: none;
   width: 42px;
   height: 42px;
-
+  cursor: pointer;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   padding: 8px;
   fill: black;
-
   transition: transform 0.25s;
 
   &:hover {
