@@ -162,11 +162,15 @@ export default defineComponent({
     };
 
     const saveData = () => {
+      const justChangedUnsplashTopic =
+        state.settings.backgroundImageUnsplashTopic !==
+        store.state.settings.backgroundImageUnsplashTopic;
       store.dispatch("updateSettings", state.settings).then(() => {
-        if (
+        const justChangedToUnsplash =
           state.settings.backgroundImageSource === "unsplash" &&
-          !store.state.settings.backgroundImageUrl
-        ) {
+          !store.state.settings.backgroundImageUrl;
+
+        if (justChangedToUnsplash || justChangedUnsplashTopic) {
           getRandomUnsplashImage();
         }
       });
