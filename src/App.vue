@@ -77,8 +77,13 @@ html {
   padding: 0;
   border: none;
   background: none;
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
+
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  padding: 8px;
+  fill: black;
 
   transition: transform 0.25s;
 
