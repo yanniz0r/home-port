@@ -282,6 +282,11 @@ export default defineComponent({
   margin: 0;
   border: none;
   background: none;
+  transition: all 0.25s;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.25);
+  }
 
   svg {
     max-width: 100%;
